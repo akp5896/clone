@@ -4,12 +4,17 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
+import com.parse.ParseUser;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,6 +25,8 @@ public class FeedActivity extends AppCompatActivity {
     List<Post> posts;
     PostAdapter adapter;
     RecyclerView rvPosts;
+    FloatingActionButton btnCompose;
+    private Button btnLogout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +36,29 @@ public class FeedActivity extends AppCompatActivity {
         posts = new ArrayList<>();
         adapter = new PostAdapter(this, posts);
         rvPosts  = findViewById(R.id.rvPosts);
+        btnCompose = findViewById(R.id.btnCompose);
+        btnLogout = findViewById(R.id.btnLogout);
+
+        btnLogout.setText(String.format(getResources().getString(R.string.logged), ParseUser.getCurrentUser().getUsername()));
+
+        btnCompose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(FeedActivity.this, MainActivity.class);
+                startActivity(i);
+            }
+        });
+
+        btnLogout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ParseUser.logOut();
+                Intent i = new Intent(FeedActivity.this, LoginActivity.class);
+                startActivity(i);
+                finish();
+            }
+        });
+
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         rvPosts.setLayoutManager(layoutManager);
         rvPosts.setAdapter(adapter);

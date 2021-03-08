@@ -107,8 +107,6 @@ public class MainActivity extends AppCompatActivity {
                 savePost(desc, currentUser, photoFile);
             }
         });
-        Intent i = new Intent(MainActivity.this, FeedActivity.class);
-        startActivity(i);
     }
 
     @Override
