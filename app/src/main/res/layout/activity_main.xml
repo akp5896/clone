@@ -30,6 +30,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/take_picture"
+        android:backgroundTint="@color/blue"
          />
 
     <ImageView
@@ -42,6 +43,7 @@
         android:id="@+id/btnSubmit"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:backgroundTint="@color/blue"
         android:text="@string/submit" />
 
     <ProgressBar
