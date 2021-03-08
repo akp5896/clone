@@ -1,5 +1,6 @@
 package com.example.instagramclone;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -13,15 +14,22 @@ import android.widget.Button;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.parse.FindCallback;
 import com.parse.ParseException;
+import com.parse.ParseFile;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
+import org.parceler.Parcels;
+
+import java.io.File;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 public class FeedActivity extends AppCompatActivity {
 
     public static final String TAG = "FEED ACTIVITY";
+    public static final int REQUEST_CODE = 56;
     List<Post> posts;
     PostAdapter adapter;
     RecyclerView rvPosts;
@@ -45,7 +53,7 @@ public class FeedActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(FeedActivity.this, MainActivity.class);
-                startActivity(i);
+                startActivityForResult(i, REQUEST_CODE);
             }
         });
 
@@ -83,10 +91,23 @@ public class FeedActivity extends AppCompatActivity {
                 {
                     Log.i(TAG, i.getDescription());
                 }
+                Collections.reverse(p);
                 adapter.addAll(p);
                 Log.i(TAG, String.valueOf(adapter.getItemCount()));
                 adapter.notifyDataSetChanged();
             }
         });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == REQUEST_CODE && resultCode == RESULT_OK)
+        {
+            Post post = (Post) data.getExtras().get("post");
+            posts.add(0, post);
+            adapter.notifyItemInserted(0);
+            rvPosts.smoothScrollToPosition(0);
+        }
     }
 }

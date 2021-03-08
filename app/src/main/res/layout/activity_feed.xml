@@ -15,11 +15,18 @@
         android:backgroundTint="@color/green"
         android:text="@string/logged" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvPosts"
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipeContainer"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/btnLogout"/>
+        android:layout_height="match_parent">
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvPosts"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/btnLogout"/>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:src="@drawable/instagram_new_post_outline_24"
         android:backgroundTint="@color/gray"

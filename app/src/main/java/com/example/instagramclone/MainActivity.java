@@ -17,6 +17,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.parse.FindCallback;
@@ -25,6 +26,8 @@ import com.parse.ParseFile;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
+
+import org.parceler.Parcels;
 
 import java.io.File;
 import java.util.List;
@@ -42,12 +45,14 @@ public class MainActivity extends AppCompatActivity {
     private Button btnLogout;
     public String photoFileName = "photo.jpg";
     private Context context;
+    private ProgressBar pbLoading;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        pbLoading = findViewById(R.id.pbLoading);
         btnLogout = findViewById(R.id.btnLogout);
         etDescription = findViewById(R.id.etDescription);
         btnCapture = findViewById(R.id.btnCapture);
@@ -93,6 +98,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 String desc = etDescription.getText().toString();
+                pbLoading.setVisibility(View.VISIBLE);
                 if(desc.isEmpty())
                 {
                     Toast.makeText(MainActivity.this, "Description is empty", Toast.LENGTH_SHORT).show();
@@ -134,6 +140,7 @@ public class MainActivity extends AppCompatActivity {
         post.saveInBackground(new SaveCallback() {
             @Override
             public void done(ParseException e) {
+                pbLoading.setVisibility(View.INVISIBLE);
                 if(e != null)
                 {
                     Log.e(TAG, "saving error", e);
@@ -141,7 +148,11 @@ public class MainActivity extends AppCompatActivity {
                 }
                 etDescription.setText("");
                 ivPostImage.setImageResource(0);
+                Intent intent = getIntent();
+                intent.putExtra("post", post);
+                setResult(RESULT_OK, intent);
                 Log.i(TAG, "Saved");
+                finish();
             }
         });
     }

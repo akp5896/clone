@@ -3,6 +3,8 @@ package com.example.instagramclone;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,9 +12,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.parse.ParseException;
+import com.parse.ParseFile;
 
 import java.io.File;
 import java.util.List;
@@ -72,6 +76,10 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
             tvPostdescripion.setText(post.getDescription());
             if(post.getImage() != null)
             {
+                //Log.i("IMAGE ", String.valueOf(post.getImage().getFile() == null));
+                //Log.i("IMAGE ", String.valueOf(post.getImage().getUrl() == null));
+                //String img = post.getImage().
+                //Log.i("","");
                 Bitmap takenImage = BitmapFactory.decodeFile(post.getImage().getFile().getAbsolutePath());
                 ivCapture.setImageBitmap(takenImage);
             }
