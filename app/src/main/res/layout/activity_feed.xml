@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout
+<RelativeLayout
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
@@ -7,15 +7,46 @@
     android:layout_height="match_parent"
     tools:context=".FeedActivity">
 
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/lvLogo"
+        android:orientation="horizontal"
+        android:layout_gravity="top">
+        <ImageView
+            android:layout_width="40dp"
+            android:id="@+id/ivCamera"
+            android:layout_height="40dp"
+            android:src="@drawable/camera"
+            />
+    <ImageView
+        android:id="@+id/ivLogo"
+        android:layout_toEndOf="@+id/ivCamera"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_toStartOf="@+id/ivPlane"
+        android:src="@drawable/nav_logo_whiteout"/>
+        <ImageView
+            android:layout_alignParentEnd="true"
+            android:id="@+id/ivPlane"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_gravity="right"
+            android:src="@drawable/nav_inbox_paper_plane"
+            />
+    </RelativeLayout>
+
     <Button
         android:id="@+id/btnLogout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
+        android:layout_alignParentBottom="true"
         android:backgroundTint="@color/green"
         android:text="@string/logged" />
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:layout_below="@+id/lvLogo"
         android:id="@+id/swipeContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -34,8 +65,9 @@
         app:fabSize="normal"
         app:borderWidth="0dp"
         android:layout_width="wrap_content"
-        android:layout_gravity="bottom|right"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
         android:layout_marginBottom="30dp"
         android:layout_marginEnd="10dp"
         android:layout_height="wrap_content" />
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+</RelativeLayout>
