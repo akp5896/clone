@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">InstagramClone</string>
+    <string name="description">Description</string>
+    <string name="take_picture">TAKE PICTURE</string>
+    <string name="submit">SUBMIT</string>
+    <string name="logged">Logged in as %s. Log out.</string>
+</resources>
