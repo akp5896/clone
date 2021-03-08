@@ -55,8 +55,6 @@ public class MainActivity extends AppCompatActivity {
         btnSubmit = findViewById(R.id.btnSubmit);
         context = this;
 
-        queryPosts();
-
         btnLogout.setText(String.format(getResources().getString(R.string.logged), ParseUser.getCurrentUser().getUsername()));
 
         btnCapture.setOnClickListener(new View.OnClickListener() {
@@ -109,6 +107,8 @@ public class MainActivity extends AppCompatActivity {
                 savePost(desc, currentUser, photoFile);
             }
         });
+        Intent i = new Intent(MainActivity.this, FeedActivity.class);
+        startActivity(i);
     }
 
     @Override
@@ -161,25 +161,5 @@ public class MainActivity extends AppCompatActivity {
 
         // Return the file target for the photo based on filename
         return new File(mediaStorageDir.getPath() + File.separator + fileName);
-    }
-
-    private void queryPosts()
-    {
-        ParseQuery<Post> query = ParseQuery.getQuery(Post.class);
-        query.include(Post.KEY_USER);
-        query.findInBackground(new FindCallback<Post>() {
-            @Override
-            public void done(List<Post> posts, ParseException e) {
-                if(e != null)
-                {
-                    Log.e(TAG, "Issue receiving posts", e);
-                    return;
-                }
-                for (Post post : posts)
-                {
-                    Log.i(TAG, "Post: " + post.getDescription() + " username: " + post.getUser().getUsername());
-                }
-            }
-        });
     }
 }

@@ -22,6 +22,11 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
     List<Post> posts;
     Context context;
 
+    public void addAll(List<Post> postsList)
+    {
+        posts.addAll(postsList);
+    }
+
     public PostAdapter(Context context, List<Post> posts)
     {
         this.context = context;
@@ -65,8 +70,11 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
         public void bind(final Post post) throws ParseException {
             tvUsername.setText(post.getUser().getUsername());
             tvPostdescripion.setText(post.getDescription());
-            Bitmap takenImage = BitmapFactory.decodeFile(post.getImage().getFile().getAbsolutePath());
-            ivCapture.setImageBitmap(takenImage);
+            if(post.getImage() != null)
+            {
+                Bitmap takenImage = BitmapFactory.decodeFile(post.getImage().getFile().getAbsolutePath());
+                ivCapture.setImageBitmap(takenImage);
+            }
         }
     }
 }
