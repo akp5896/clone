@@ -8,6 +8,13 @@
     android:layout_height="match_parent"
     tools:context=".SignupActivity">
 
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/ivLogo"
+        app:layout_constraintTop_toTopOf="parent"
+        android:src="@drawable/nav_logo_whiteout"/>
+
     <EditText
         android:id="@+id/etNewName"
         android:layout_width="match_parent"
