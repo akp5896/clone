@@ -23,6 +23,7 @@ import com.example.instagramclone.PostAdapter;
 import com.example.instagramclone.R;
 import com.example.instagramclone.TimeFormatter;
 import com.parse.FindCallback;
+import com.parse.Parse;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
@@ -124,6 +125,7 @@ public class PostsFragment extends Fragment {
                     Log.e(TAG, "Issue receiving posts", e);
                     return;
                 }
+
                 //for(Post i : p)
                 //{
                     //Log.i(TAG, i.getDescription());
