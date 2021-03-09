@@ -81,7 +81,7 @@ public class DetailedActivity extends AppCompatActivity {
             }
         });
 
-        bottomNavigationView.setSelectedItemId(R.id.action_add);
+        bottomNavigationView.setSelectedItemId(R.id.action_comment);
 
 
         tvUsername.setText(post.getUser().getUsername());

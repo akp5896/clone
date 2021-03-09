@@ -43,17 +43,20 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
     public class ViewHolder extends RecyclerView.ViewHolder
     {
         TextView username;
+        TextView created;
         TextView content;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             username = itemView.findViewById(R.id.tvUsername);
             content = itemView.findViewById(R.id.tvCommentContent);
+            created = itemView.findViewById(R.id.tvCreated);
         }
 
         public void bind(Comment comment) {
             username.setText(comment.getUser().getUsername());
             content.setText(comment.getContent());
+            created.setText(TimeFormatter.getRelativeTime(comment.getCreatedAt()));
         }
     }
 }
