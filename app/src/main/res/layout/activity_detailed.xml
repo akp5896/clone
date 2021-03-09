@@ -37,9 +37,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/lvButtons"
-        tools:text="TextView" />
+        tools:text="Description" />
     <LinearLayout
         android:id="@+id/lvButtons"
+
         android:layout_margin="5dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -62,4 +63,19 @@
             android:src="@drawable/ufi_new_direct"
             android:layout_height="20dp"/>
     </LinearLayout>
+
+    <FrameLayout
+        android:id="@+id/flContainer"
+        android:layout_below="@+id/tvPostDescription"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/bottom_navigation"
+        />
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottom_navigation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        app:menu="@menu/detailed_menu" />
 </RelativeLayout>

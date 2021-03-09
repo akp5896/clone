@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/action_comment"
+        android:icon="@drawable/ufi_comment"
+        android:title="Comments"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/action_add"
+        android:icon="@drawable/compose"
+        android:title=" Add comment"
+        app:showAsAction="always" />
+</menu>

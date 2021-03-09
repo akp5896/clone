@@ -1,23 +1,46 @@
 package com.example.instagramclone;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.parse.ParseException;
+import com.parse.ParseFile;
+import com.parse.ParseUser;
+import com.parse.SaveCallback;
+
+import java.io.File;
+
+import fragments.ComposeFragment;
+import fragments.PostsFragment;
+import fragments.ProfileFragment;
+import fragments.WriteComment;
 
 public class DetailedActivity extends AppCompatActivity {
 
+    final FragmentManager fragmentManager = getSupportFragmentManager();
+    public static final String TAG = "Detailed activity";
     TextView tvUsername;
     ImageView ivCapture;
     TextView tvDate;
     TextView tvPostdescripion;
     RelativeLayout container;
+    BottomNavigationView bottomNavigationView;
     Post post;
 
     @Override
@@ -31,6 +54,36 @@ public class DetailedActivity extends AppCompatActivity {
         tvPostdescripion = findViewById(R.id.tvPostDescription);
         tvDate = findViewById(R.id.tvCreatedAt);
         container = findViewById(R.id.rvContainer);
+        bottomNavigationView = findViewById(R.id.bottom_navigation);
+
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                Fragment fragment;
+                Log.i(TAG, String.valueOf(item.getItemId()));
+                switch (item.getItemId()) {
+                    case R.id.action_add:
+                        Bundle bundle = new Bundle();
+                        bundle.putParcelable("post", post);
+                        fragment = new WriteComment();
+                        fragment.setArguments(bundle);
+                        Log.i(TAG, "HOME");
+                        break;
+                    case R.id.action_compose:
+                        fragment = new ComposeFragment();
+                        break;
+                    case R.id.action_profile:
+                    default:
+                        fragment = new ProfileFragment();
+                        break;
+                }
+                fragmentManager.beginTransaction().replace(R.id.flContainer, fragment).commit();
+                return true;
+            }
+        });
+
+        bottomNavigationView.setSelectedItemId(R.id.action_add);
+
 
         tvUsername.setText(post.getUser().getUsername());
         tvPostdescripion.setText(post.getDescription());
@@ -46,4 +99,6 @@ public class DetailedActivity extends AppCompatActivity {
             ivCapture.setImageBitmap(takenImage);
         }
     }
+
+
 }

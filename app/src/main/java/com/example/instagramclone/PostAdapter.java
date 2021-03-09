@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +20,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.parse.ParseException;
 import com.parse.ParseFile;
+import com.parse.ParseObject;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
