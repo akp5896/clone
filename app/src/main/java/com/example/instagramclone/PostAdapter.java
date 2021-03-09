@@ -19,6 +19,8 @@ import com.parse.ParseException;
 import com.parse.ParseFile;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
@@ -62,6 +64,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
     {
         TextView tvUsername;
         ImageView ivCapture;
+        TextView tvDate;
         TextView tvPostdescripion;
 
         public ViewHolder(@NonNull View itemView) {
@@ -69,11 +72,13 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
             tvUsername = itemView.findViewById(R.id.tvUsername);
             ivCapture = itemView.findViewById(R.id.ivCapture);
             tvPostdescripion = itemView.findViewById(R.id.tvPostDescription);
+            tvDate = itemView.findViewById(R.id.tvCreatedAt);
         }
 
         public void bind(final Post post) throws ParseException {
             tvUsername.setText(post.getUser().getUsername());
             tvPostdescripion.setText(post.getDescription());
+            tvDate.setText(getRelativeTime(post.getCreatedAt()));
             if(post.getImage() != null)
             {
                 //Log.i("IMAGE ", String.valueOf(post.getImage().getFile() == null));
@@ -83,6 +88,12 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
                 Bitmap takenImage = BitmapFactory.decodeFile(post.getImage().getFile().getAbsolutePath());
                 ivCapture.setImageBitmap(takenImage);
             }
+        }
+
+        private String getRelativeTime(Date date)
+        {
+            SimpleDateFormat format = new SimpleDateFormat("EEE MMM dd HH:mm:ss ZZZZZ yyyy");
+            return TimeFormatter.getTimeDifference(format.format(date));
         }
     }
 }

@@ -21,13 +21,17 @@ import com.example.instagramclone.LoginActivity;
 import com.example.instagramclone.Post;
 import com.example.instagramclone.PostAdapter;
 import com.example.instagramclone.R;
+import com.example.instagramclone.TimeFormatter;
 import com.parse.FindCallback;
 import com.parse.ParseException;
+import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -115,7 +119,11 @@ public class PostsFragment extends Fragment {
                 }
                 //for(Post i : p)
                 //{
-                //    Log.i(TAG, i.getDescription());
+                    //Log.i(TAG, i.getDescription());
+                    //Date a = i.getCreatedAt();
+
+                    //Log.i(TAG, x);
+                //    Log.i(TAG, "!");
                 //}
                 //Collections.reverse(p);
                 posts.clear();
