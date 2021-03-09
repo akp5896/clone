@@ -8,6 +8,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -41,6 +42,7 @@ public class PostsFragment extends Fragment {
     private RecyclerView rvPosts;
     protected PostAdapter adapter;
     protected Button btnLogout;
+    private SwipeRefreshLayout swipeContainer;
 
 
     protected List<Post> posts;
@@ -68,6 +70,7 @@ public class PostsFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         rvPosts = view.findViewById(R.id.rvPosts);
         btnLogout = view.findViewById(R.id.btnLogout);
+        swipeContainer = view.findViewById(R.id.swipeContainer);
         posts = new ArrayList<>();
         adapter = new PostAdapter(getContext(), posts);
 
@@ -79,6 +82,14 @@ public class PostsFragment extends Fragment {
                 Intent i = new Intent(getActivity(), LoginActivity.class);
                 startActivity(i);
                 getActivity().finish();
+            }
+        });
+
+        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                Log.i(TAG, "fetching new data");
+                populateQueryPosts();
             }
         });
 
@@ -107,9 +118,11 @@ public class PostsFragment extends Fragment {
                 //    Log.i(TAG, i.getDescription());
                 //}
                 //Collections.reverse(p);
+                posts.clear();
                 posts.addAll(p);
                 Log.i(TAG, String.valueOf(adapter.getItemCount()));
                 adapter.notifyDataSetChanged();
+                swipeContainer.setRefreshing(false);
             }
         });
     }
