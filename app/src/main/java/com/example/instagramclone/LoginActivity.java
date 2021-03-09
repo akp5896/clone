@@ -29,7 +29,7 @@ public class LoginActivity extends AppCompatActivity {
 
         if(ParseUser.getCurrentUser() != null)
         {
-            gotFeedActivity();
+            gotMainActivity();
         }
 
         etUsername = findViewById(R.id.etUsername);
@@ -65,14 +65,14 @@ public class LoginActivity extends AppCompatActivity {
                     Log.e(TAG, "Issue with login", e);
                     return;
                 }
-                gotFeedActivity();
+                gotMainActivity();
                 Toast.makeText(LoginActivity.this, "Logged in successfully", Toast.LENGTH_SHORT).show();
             }
         });
     }
 
-    private void gotFeedActivity() {
-        Intent i = new Intent(this, FeedActivity.class);
+    private void gotMainActivity() {
+        Intent i = new Intent(this, MainActivity.class);
         startActivity(i);
         finish();
     }
