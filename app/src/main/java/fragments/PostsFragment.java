@@ -94,11 +94,18 @@ public class PostsFragment extends Fragment {
             public void onRefresh() {
                 Log.i(TAG, "fetching new data");
                 populateQueryPosts();
+
             }
         });
 
         rvPosts.setAdapter(adapter);
         rvPosts.setLayoutManager(new LinearLayoutManager(getContext()));
+        populateQueryPosts();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
         populateQueryPosts();
     }
 

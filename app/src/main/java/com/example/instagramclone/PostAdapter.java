@@ -73,19 +73,20 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
         ImageView ivCapture;
         Button ibHeart;
         TextView tvnumLikes;
-        TextView tvDate;
         TextView tvPostdescripion;
+        TextView tvDate;
         RelativeLayout container;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             tvnumLikes = itemView.findViewById(R.id.numlikes);
+            ibHeart = itemView.findViewById(R.id.ibHeart);
             tvUsername = itemView.findViewById(R.id.tvUsername);
             ivCapture = itemView.findViewById(R.id.ivCapture);
             tvPostdescripion = itemView.findViewById(R.id.tvPostDescription);
             tvDate = itemView.findViewById(R.id.tvCreatedAt);
             container = itemView.findViewById(R.id.rvContainer);
-            ibHeart = itemView.findViewById(R.id.ibHeart);
+
         }
 
         public void bind(final Post post) throws ParseException {

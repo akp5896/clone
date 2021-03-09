@@ -40,6 +40,8 @@ public class DetailedActivity extends AppCompatActivity {
     ImageView ivCapture;
     TextView tvDate;
     TextView tvPostdescripion;
+    TextView tvnumLikes;
+    Button ibHeart;
     RelativeLayout container;
     BottomNavigationView bottomNavigationView;
     Post post;
@@ -54,8 +56,38 @@ public class DetailedActivity extends AppCompatActivity {
         ivCapture = findViewById(R.id.ivCapture);
         tvPostdescripion = findViewById(R.id.tvPostDescription);
         tvDate = findViewById(R.id.tvCreatedAt);
+        tvnumLikes = findViewById(R.id.numlikes);
+        ibHeart = findViewById(R.id.ibHeart);
         container = findViewById(R.id.rvContainer);
         bottomNavigationView = findViewById(R.id.bottom_navigation);
+
+
+
+        tvnumLikes.setText(String.valueOf(post.getLikes()));
+        if(!post.isLiked())
+            ibHeart.setBackgroundResource(R.drawable.ufi_heart);
+        else
+            ibHeart.setBackgroundResource(R.drawable.ufi_heart_active);
+
+        ibHeart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(post.isLiked())
+                {
+                    post.setLiked(false);
+                    post.setLikes(post.getLikes() - 1);
+                    ibHeart.setBackgroundResource(R.drawable.ufi_heart);
+                }
+                else
+                {
+                    post.setLikes(post.getLikes() + 1);
+                    post.setLiked(true);
+                    ibHeart.setBackgroundResource(R.drawable.ufi_heart_active);
+                }
+                tvnumLikes.setText(String.valueOf(post.getLikes()));
+                post.saveInBackground();
+            }
+        });
 
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
