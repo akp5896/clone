@@ -10,6 +10,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -18,6 +20,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
@@ -68,21 +71,26 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
     {
         TextView tvUsername;
         ImageView ivCapture;
+        Button ibHeart;
+        TextView tvnumLikes;
         TextView tvDate;
         TextView tvPostdescripion;
         RelativeLayout container;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
+            tvnumLikes = itemView.findViewById(R.id.numlikes);
             tvUsername = itemView.findViewById(R.id.tvUsername);
             ivCapture = itemView.findViewById(R.id.ivCapture);
             tvPostdescripion = itemView.findViewById(R.id.tvPostDescription);
             tvDate = itemView.findViewById(R.id.tvCreatedAt);
             container = itemView.findViewById(R.id.rvContainer);
+            ibHeart = itemView.findViewById(R.id.ibHeart);
         }
 
         public void bind(final Post post) throws ParseException {
             tvUsername.setText(post.getUser().getUsername());
+            tvnumLikes.setText(String.valueOf(post.getLikes()));
             tvPostdescripion.setText(post.getDescription());
             tvDate.setText(TimeFormatter.getRelativeTime(post.getCreatedAt()));
             if(post.getImage() != null)
@@ -90,6 +98,31 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
                 Bitmap takenImage = BitmapFactory.decodeFile(post.getImage().getFile().getAbsolutePath());
                 ivCapture.setImageBitmap(takenImage);
             }
+
+            if(!post.isLiked())
+                ibHeart.setBackgroundResource(R.drawable.ufi_heart);
+            else
+                ibHeart.setBackgroundResource(R.drawable.ufi_heart_active);
+
+            ibHeart.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(post.isLiked())
+                    {
+                        post.setLiked(false);
+                        post.setLikes(post.getLikes() - 1);
+                        ibHeart.setBackgroundResource(R.drawable.ufi_heart);
+                    }
+                    else
+                    {
+                        post.setLikes(post.getLikes() + 1);
+                        post.setLiked(true);
+                        ibHeart.setBackgroundResource(R.drawable.ufi_heart_active);
+                    }
+                    tvnumLikes.setText(String.valueOf(post.getLikes()));
+                    post.saveInBackground();
+                }
+            });
 
             container.setOnClickListener(new View.OnClickListener() {
                 @Override

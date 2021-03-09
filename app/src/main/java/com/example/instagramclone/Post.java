@@ -1,5 +1,7 @@
 package com.example.instagramclone;
 
+import android.text.PrecomputedText;
+
 import androidx.annotation.NonNull;
 
 import com.parse.ParseClassName;
@@ -15,6 +17,8 @@ import java.util.Date;
 @ParseClassName("Post")
 public class Post extends ParseObject {
     public static final String KEY_DESCRIPTION = "description";
+    public static final String KEY_LIKESCOUNT = "likes";
+    public static final String KEY_LIKED = "liked";
     public static final String KEY_IMAGE = "image";
     public static final String KEY_USER = "user";
     public static final String KEY_CREATED_AT = "createdAt";
@@ -25,6 +29,17 @@ public class Post extends ParseObject {
     {
         return getString(KEY_DESCRIPTION);
     }
+
+    public boolean isLiked(){return getBoolean(KEY_LIKED);}
+
+    public void setLiked(boolean val)
+    {
+        put(KEY_LIKED, val);
+    }
+
+    public int getLikes(){return getInt(KEY_LIKESCOUNT);}
+
+    public void setLikes(int value){put(KEY_LIKESCOUNT, value);}
 
     public void setDescription(String description)
     {
