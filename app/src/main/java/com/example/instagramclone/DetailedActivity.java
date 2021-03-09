@@ -26,6 +26,7 @@ import com.parse.SaveCallback;
 
 import java.io.File;
 
+import fragments.CommentsFragment;
 import fragments.ComposeFragment;
 import fragments.PostsFragment;
 import fragments.ProfileFragment;
@@ -61,20 +62,18 @@ public class DetailedActivity extends AppCompatActivity {
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 Fragment fragment;
                 Log.i(TAG, String.valueOf(item.getItemId()));
+                Bundle bundle = new Bundle();
+                bundle.putParcelable("post", post);
                 switch (item.getItemId()) {
                     case R.id.action_add:
-                        Bundle bundle = new Bundle();
-                        bundle.putParcelable("post", post);
                         fragment = new WriteComment();
                         fragment.setArguments(bundle);
                         Log.i(TAG, "HOME");
                         break;
-                    case R.id.action_compose:
-                        fragment = new ComposeFragment();
-                        break;
-                    case R.id.action_profile:
+                    case R.id.action_comment:
                     default:
-                        fragment = new ProfileFragment();
+                        fragment = new CommentsFragment();
+                        fragment.setArguments(bundle);
                         break;
                 }
                 fragmentManager.beginTransaction().replace(R.id.flContainer, fragment).commit();
