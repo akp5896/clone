@@ -1,6 +1,7 @@
 package com.example.instagramclone;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -81,7 +82,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
         public void bind(final Post post) throws ParseException {
             tvUsername.setText(post.getUser().getUsername());
             tvPostdescripion.setText(post.getDescription());
-            tvDate.setText(getRelativeTime(post.getCreatedAt()));
+            tvDate.setText(TimeFormatter.getRelativeTime(post.getCreatedAt()));
             if(post.getImage() != null)
             {
                 Bitmap takenImage = BitmapFactory.decodeFile(post.getImage().getFile().getAbsolutePath());
@@ -91,15 +92,12 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
             container.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Log.i("Post", tvPostdescripion.getText().toString() + " clicked");
+                    Intent i = new Intent(context, DetailedActivity.class);
+                    i.putExtra("post", post);
+                    context.startActivity(i);
                 }
             });
         }
 
-        private String getRelativeTime(Date date)
-        {
-            SimpleDateFormat format = new SimpleDateFormat("EEE MMM dd HH:mm:ss ZZZZZ yyyy");
-            return TimeFormatter.getTimeDifference(format.format(date));
-        }
     }
 }

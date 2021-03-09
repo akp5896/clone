@@ -49,6 +49,12 @@ public class TimeFormatter {
         return time;
     }
 
+    public static String getRelativeTime(Date date)
+    {
+        SimpleDateFormat format = new SimpleDateFormat("EEE MMM dd HH:mm:ss ZZZZZ yyyy");
+        return TimeFormatter.getTimeDifference(format.format(date));
+    }
+
     /**
      * Given a date String of the format given by the Twitter API, returns a display-formatted
      * String of the absolute date of the form "30 Jun 16".
