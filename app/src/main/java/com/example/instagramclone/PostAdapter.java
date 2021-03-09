@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -66,6 +67,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
         ImageView ivCapture;
         TextView tvDate;
         TextView tvPostdescripion;
+        RelativeLayout container;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -73,6 +75,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
             ivCapture = itemView.findViewById(R.id.ivCapture);
             tvPostdescripion = itemView.findViewById(R.id.tvPostDescription);
             tvDate = itemView.findViewById(R.id.tvCreatedAt);
+            container = itemView.findViewById(R.id.rvContainer);
         }
 
         public void bind(final Post post) throws ParseException {
@@ -81,13 +84,16 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
             tvDate.setText(getRelativeTime(post.getCreatedAt()));
             if(post.getImage() != null)
             {
-                //Log.i("IMAGE ", String.valueOf(post.getImage().getFile() == null));
-                //Log.i("IMAGE ", String.valueOf(post.getImage().getUrl() == null));
-                //String img = post.getImage().
-                //Log.i("","");
                 Bitmap takenImage = BitmapFactory.decodeFile(post.getImage().getFile().getAbsolutePath());
                 ivCapture.setImageBitmap(takenImage);
             }
+
+            container.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Log.i("Post", tvPostdescripion.getText().toString() + " clicked");
+                }
+            });
         }
 
         private String getRelativeTime(Date date)
