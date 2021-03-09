@@ -2,8 +2,12 @@ package fragments;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -21,8 +25,26 @@ import java.util.List;
 public class ProfileFragment extends PostsFragment {
 
 
+    ImageView profilePicture;
+    TextView username;
+    Button btnChangePicture;
 
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        return inflater.inflate(R.layout.fragment_profile, container, false);
+    }
 
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        profilePicture = view.findViewById(R.id.ivProfilePicture);
+        username = view.findViewById(R.id.tvUsername);
+        btnChangePicture = view.findViewById(R.id.btnChangePicture);
+
+        username.setText(ParseUser.getCurrentUser().getUsername());
+    }
 
     @Override
     protected void populateQueryPosts() {
