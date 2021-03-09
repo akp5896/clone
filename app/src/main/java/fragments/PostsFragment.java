@@ -1,0 +1,116 @@
+package fragments;
+
+import android.content.Intent;
+import android.os.Bundle;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.RelativeLayout;
+
+import com.example.instagramclone.LoginActivity;
+import com.example.instagramclone.Post;
+import com.example.instagramclone.PostAdapter;
+import com.example.instagramclone.R;
+import com.parse.FindCallback;
+import com.parse.ParseException;
+import com.parse.ParseQuery;
+import com.parse.ParseUser;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+/**
+ * A simple {@link Fragment} subclass.
+ * Use the {@link PostsFragment#newInstance} factory method to
+ * create an instance of this fragment.
+ */
+public class PostsFragment extends Fragment {
+
+    public static final String TAG = "Posts fragment";
+
+    private RecyclerView rvPosts;
+    protected PostAdapter adapter;
+    protected Button btnLogout;
+
+
+    protected List<Post> posts;
+
+    public PostsFragment() {
+        // Required empty public constructor
+    }
+
+
+    public static PostsFragment newInstance(String param1, String param2) {
+
+        return null;
+    }
+
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        return inflater.inflate(R.layout.fragment_posts, container, false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        rvPosts = view.findViewById(R.id.rvPosts);
+        btnLogout = view.findViewById(R.id.btnLogout);
+        posts = new ArrayList<>();
+        adapter = new PostAdapter(getContext(), posts);
+
+        btnLogout.setText(String.format(getResources().getString(R.string.logged), ParseUser.getCurrentUser().getUsername()));
+        btnLogout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ParseUser.logOut();
+                Intent i = new Intent(getActivity(), LoginActivity.class);
+                startActivity(i);
+                getActivity().finish();
+            }
+        });
+
+        rvPosts.setAdapter(adapter);
+        rvPosts.setLayoutManager(new LinearLayoutManager(getContext()));
+        populateQueryPosts();
+    }
+
+    protected void populateQueryPosts()
+    {
+        ParseQuery<Post> query = ParseQuery.getQuery(Post.class);
+        query.include(Post.KEY_USER);
+        query.setLimit(20);
+        query.addDescendingOrder(Post.KEY_CREATED_AT);
+
+        query.findInBackground(new FindCallback<Post>() {
+            @Override
+            public void done(List<Post> p, ParseException e) {
+                if(e != null)
+                {
+                    Log.e(TAG, "Issue receiving posts", e);
+                    return;
+                }
+                //for(Post i : p)
+                //{
+                //    Log.i(TAG, i.getDescription());
+                //}
+                //Collections.reverse(p);
+                posts.addAll(p);
+                Log.i(TAG, String.valueOf(adapter.getItemCount()));
+                adapter.notifyDataSetChanged();
+            }
+        });
+    }
+}

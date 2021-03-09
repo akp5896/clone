@@ -40,6 +40,8 @@ import java.io.File;
 import java.util.List;
 
 import fragments.ComposeFragment;
+import fragments.PostsFragment;
+import fragments.ProfileFragment;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -63,23 +65,22 @@ public class MainActivity extends AppCompatActivity {
                 Log.i(TAG, String.valueOf(item.getItemId()));
                 switch (item.getItemId()) {
                     case R.id.action_home:
-                        fragment = new ComposeFragment();
+                        fragment = new PostsFragment();
                         Log.i(TAG, "HOME");
-                        Toast.makeText(MainActivity.this, "Home!", Toast.LENGTH_SHORT).show();
                         break;
                     case R.id.action_compose:
                         fragment = new ComposeFragment();
-                        Toast.makeText(MainActivity.this, "Compose!", Toast.LENGTH_SHORT).show();
                         break;
                     case R.id.action_profile:
                     default:
-                        fragment = new ComposeFragment();
-                        Toast.makeText(MainActivity.this, "Profile!", Toast.LENGTH_SHORT).show();
+                        fragment = new ProfileFragment();
                         break;
                 }
                 fragmentManager.beginTransaction().replace(R.id.flContainer, fragment).commit();
                 return true;
             }
         });
+
+        bottomNavigationView.setSelectedItemId(R.id.action_home);
     }
 }

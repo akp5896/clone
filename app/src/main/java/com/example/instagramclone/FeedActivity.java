@@ -70,34 +70,11 @@ public class FeedActivity extends AppCompatActivity {
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         rvPosts.setLayoutManager(layoutManager);
         rvPosts.setAdapter(adapter);
-        populateQueryPosts();
+        //populateQueryPosts();
         Log.i(TAG, "inside");
     }
 
-    private void populateQueryPosts()
-    {
-        ParseQuery<Post> query = ParseQuery.getQuery(Post.class);
-        query.include(Post.KEY_USER);
 
-        query.findInBackground(new FindCallback<Post>() {
-            @Override
-            public void done(List<Post> p, ParseException e) {
-                if(e != null)
-                {
-                    Log.e(TAG, "Issue receiving posts", e);
-                    return;
-                }
-                for(Post i : p)
-                {
-                    Log.i(TAG, i.getDescription());
-                }
-                Collections.reverse(p);
-                adapter.addAll(p);
-                Log.i(TAG, String.valueOf(adapter.getItemCount()));
-                adapter.notifyDataSetChanged();
-            }
-        });
-    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {

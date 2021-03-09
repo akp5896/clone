@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".FeedActivity">
+    <RelativeLayout
+        android:layout_width="match_parent"
+
+        android:layout_height="match_parent">
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/lvLogo"
+        android:orientation="horizontal"
+        android:layout_gravity="top">
+        <ImageView
+            android:layout_width="40dp"
+            android:id="@+id/ivCamera"
+            android:layout_height="40dp"
+            android:src="@drawable/camera"
+            />
+        <ImageView
+            android:id="@+id/ivLogo"
+            android:layout_toEndOf="@+id/ivCamera"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:layout_toStartOf="@+id/ivPlane"
+            android:src="@drawable/nav_logo_whiteout"/>
+        <ImageView
+            android:layout_alignParentEnd="true"
+            android:id="@+id/ivPlane"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/nav_inbox_paper_plane"
+            />
+    </RelativeLayout>
+
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipeContainer"
+        android:padding="8dp"
+        android:layout_below="@+id/lvLogo"
+        android:layout_above="@id/btnLogout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvPosts"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/btnLogout"/>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+        <Button
+            android:id="@+id/btnLogout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_alignParentBottom="true"
+            android:backgroundTint="@color/green"
+            android:text="@string/logged" />
+    </RelativeLayout>
+</FrameLayout>
