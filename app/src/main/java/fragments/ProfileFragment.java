@@ -48,7 +48,7 @@ import java.util.List;
 
 import static android.app.Activity.RESULT_OK;
 
-public class ProfileFragment extends Fragment {
+public class ProfileFragment extends PostsFragment {
 
 
     private static final int RESULT_LOAD_IMAGE = 900;
@@ -57,10 +57,8 @@ public class ProfileFragment extends Fragment {
     TextView username;
     Button btnChangePicture;
     List<Post> posts;
-    PostAdapter2 adapter2;
-    private RecyclerView rvPosts;
+    PostAdapter2 adapter;
     private EndlessRecyclerViewScrollListener scrollListener;
-    protected Button btnLogout;
 
     private SwipeRefreshLayout swipeContainer;
 
@@ -84,7 +82,7 @@ public class ProfileFragment extends Fragment {
         username = view.findViewById(R.id.tvUsername);
 
         posts = new ArrayList<>();
-        adapter2 = new PostAdapter2(getContext(), posts);
+        adapter = new PostAdapter2(getContext(), posts);
 
         rvPosts = view.findViewById(R.id.rvPosts);
         btnLogout = view.findViewById(R.id.btnLogout);
@@ -111,15 +109,11 @@ public class ProfileFragment extends Fragment {
         } catch (ParseException e) {
             e.printStackTrace();
         }
-
-        LinearLayoutManager manager = new LinearLayoutManager(getContext());
-        rvPosts.setLayoutManager(manager);
-        rvPosts.setAdapter(adapter2);
-
         username.setText(ParseUser.getCurrentUser().getUsername());
-
         populateQueryPosts();
     }
+
+    @Override
     public ParseQuery<Post> getQuery()
     {
         ParseQuery<Post> query = ParseQuery.getQuery(Post.class);
@@ -130,27 +124,7 @@ public class ProfileFragment extends Fragment {
         return query;
     }
 
-    protected void populateQueryPosts() {
 
-        ParseQuery<Post> query = getQuery();
-        query.findInBackground(new FindCallback<Post>() {
-            @Override
-            public void done(List<Post> p, ParseException e) {
-                if(e != null)
-                {
-                    Log.e(TAG, "Issue receiving posts", e);
-                    return;
-                }
-                //for(Post i : p)
-                //{
-                //    Log.i(TAG, i.getDescription());
-                //}
-                //Collections.reverse(p);
-                posts.addAll(p);
-                adapter2.notifyDataSetChanged();
-            }
-        });
-    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data){
