@@ -45,8 +45,22 @@ public class Post extends ParseObject {
 
     public int getLikes(){return getInt(KEY_LIKESCOUNT);}
 
-    public void setLikedBy(ArrayList<String> a)
+    public void addLikedBy(String s)
     {
+        ArrayList<String> a = getLikedBy();
+        if(a == null) {
+            a = new ArrayList<>();
+        }
+        a.add(s);
+        put("likesBy", a);
+    }
+
+    public void removeLikedBy(String s)
+    {
+        ArrayList<String> a = getLikedBy();
+        if(a == null)
+            return;
+        a.remove(s);
         put("likesBy", a);
     }
 

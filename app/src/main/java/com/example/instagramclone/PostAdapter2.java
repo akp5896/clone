@@ -163,24 +163,12 @@ public class PostAdapter2 extends RecyclerView.Adapter<PostAdapter2.ViewHolder> 
                     {
                         post.setLikes(post.getLikes() - 1);
                         ibHeart.setBackgroundResource(R.drawable.ufi_heart);
-
-                        ArrayList<String> a = post.getLikedBy();
-                        if(a == null)
-                            a = new ArrayList<>();
-                        a.remove(ParseUser.getCurrentUser().getObjectId());
-                        post.setLikedBy(a);
-
-
+                        post.removeLikedBy(ParseUser.getCurrentUser().getObjectId());
                     }
                     else
                     {
-
-                        ArrayList<String> a = post.getLikedBy();
-                        if(a == null)
-                            a = new ArrayList<>();
-                        a.add(ParseUser.getCurrentUser().getObjectId());
                         post.setLikes(post.getLikes() + 1);
-                        post.setLikedBy(a);
+                        post.addLikedBy(ParseUser.getCurrentUser().getObjectId());
                         ibHeart.setBackgroundResource(R.drawable.ufi_heart_active);
                     }
                     tvnumLikes.setText(String.valueOf(post.getLikes()));
