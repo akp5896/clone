@@ -55,9 +55,10 @@ public class PostsFragment extends Fragment {
     protected PostAdapter adapter;
     private EndlessRecyclerViewScrollListener scrollListener;
     protected Button btnLogout;
+    LiveData<PagedList<Post>> posts;
     private SwipeRefreshLayout swipeContainer;
 
-    List<Post> posts;
+    //List<Post> posts;
 
     //List<Post> posts;
 
@@ -85,31 +86,31 @@ public class PostsFragment extends Fragment {
         rvPosts = view.findViewById(R.id.rvPosts);
         btnLogout = view.findViewById(R.id.btnLogout);
         swipeContainer = view.findViewById(R.id.swipeContainer);
-        posts = new ArrayList<>();
-        adapter = new PostAdapter(getContext(), posts);
-
+        //posts = new ArrayList<>();
         //adapter = new PostAdapter(getContext(), posts);
 
-        //PagedList.Config pagedListConfig =
-        //        new PagedList.Config.Builder().setEnablePlaceholders(true)
-        //                .setPrefetchDistance(10)
-        //                .setInitialLoadSizeHint(10)
-        //                .setPageSize(10).build();
+        adapter = new PostAdapter(getContext());
 
-        //PagedList.Config config = new PagedList.Config.Builder().setPageSize(20).build();
+        PagedList.Config pagedListConfig =
+                new PagedList.Config.Builder().setEnablePlaceholders(true)
+                        .setPrefetchDistance(10)
+                        .setInitialLoadSizeHint(10)
+                        .setPageSize(10).build();
 
-        //ParseDataSourceFactory sourceFactory = new ParseDataSourceFactory();
+        PagedList.Config config = new PagedList.Config.Builder().setPageSize(20).build();
 
-        //posts = new LivePagedListBuilder<>(sourceFactory, config).build();
+        ParseDataSourceFactory sourceFactory = new ParseDataSourceFactory();
+
+        posts = new LivePagedListBuilder<>(sourceFactory, config).build();
 
 
 
-        //posts.observe(this, new Observer<PagedList<Post>>() {
-        //    @Override
-        //    public void onChanged(@Nullable PagedList<Post> tweets) {
-        //        adapter.submitList(tweets);
-        //    }
-        //});
+        posts.observe(this, new Observer<PagedList<Post>>() {
+            @Override
+            public void onChanged(@Nullable PagedList<Post> tweets) {
+                adapter.submitList(tweets);
+            }
+        });
         LinearLayoutManager manager = new LinearLayoutManager(getContext());
         rvPosts.setLayoutManager(manager);
         scrollListener = new EndlessRecyclerViewScrollListener(manager) {
@@ -140,14 +141,14 @@ public class PostsFragment extends Fragment {
             @Override
             public void onRefresh() {
                 Log.i("123", "fetching new data");
-                populateQueryPosts(0);
+                populateQueryPosts();
 
             }
         });
 
         rvPosts.setAdapter(adapter);
 
-        populateQueryPosts(0);
+        populateQueryPosts();
     }
 
     private void loadMoreData() {
@@ -155,7 +156,7 @@ public class PostsFragment extends Fragment {
         ParseQuery<Post> query = ParseQuery.getQuery(Post.class);
         query.include(Post.KEY_USER);
         query.setSkip(adapter.getItemCount());
-        query.setLimit(20);
+        query.setLimit(5);
         query.addDescendingOrder(Post.KEY_CREATED_AT);
 
         query.findInBackground(new FindCallback<Post>() {
@@ -168,6 +169,7 @@ public class PostsFragment extends Fragment {
                 }
                 adapter.addAll(p);
                 Log.i(TAG, String.valueOf(adapter.getItemCount()));
+
                 adapter.notifyDataSetChanged();
                 swipeContainer.setRefreshing(false);
             }
@@ -177,15 +179,14 @@ public class PostsFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        populateQueryPosts(0);
+        populateQueryPosts();
     }
 
-    protected void populateQueryPosts(int skip)
+    protected void populateQueryPosts()
     {
         ParseQuery<Post> query = ParseQuery.getQuery(Post.class);
         query.include(Post.KEY_USER);
-        query.setSkip(skip);
-        query.setLimit(20);
+        query.setLimit(5);
         query.addDescendingOrder(Post.KEY_CREATED_AT);
 
         query.findInBackground(new FindCallback<Post>() {

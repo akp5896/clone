@@ -37,7 +37,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
+public class PostAdapter extends ListAdapter<Post, PostAdapter.ViewHolder> {
 
     List<Post> posts;
     Context context;
@@ -45,13 +45,13 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
     public void addAll(List<Post> postsList)
     {
         posts.addAll(postsList);
-        //submitList(posts);
+        submitList(posts);
     }
 
     public void clear()
     {
         posts.clear();
-        //submitList(posts);
+        submitList(posts);
     }
 
     public static final DiffUtil.ItemCallback<Post> DIFF_CALLBACK =
@@ -66,9 +66,14 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
                 }
             };
 
-    public PostAdapter(Context context, List<Post> posts) {
-        //super(DIFF_CALLBACK);
-        this.posts = posts;
+    public PostAdapter() {
+        super(DIFF_CALLBACK);
+
+    }
+
+    public PostAdapter(Context context) {
+        super(DIFF_CALLBACK);
+        this.posts = new ArrayList<>();
         this.context = context;
     }
 
@@ -84,17 +89,17 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         try {
-            holder.bind(posts.get(position));
+            holder.bind(getItem(position));
         } catch (ParseException e) {
             e.printStackTrace();
 
         }
     }
 
-    @Override
-    public int getItemCount() {
-        return posts.size();
-    }
+    //@Override
+    //public int getItemCount() {
+    //    return posts.size();
+    //}
 
 
     public class ViewHolder extends RecyclerView.ViewHolder
@@ -125,7 +130,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
 
         public void bind(final Post post) throws ParseException {
             post.setParseUser(post.getUser().fetchIfNeeded());
-            if(post.getUser().getUsername() == null)
+            if(post.getUser() != null && post.getUser().getUsername() == null)
                 return;
             tvUsername.setText(post.getUser().getUsername());
             tvnumLikes.setText(String.valueOf(post.getLikes()));
