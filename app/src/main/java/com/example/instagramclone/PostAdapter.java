@@ -18,6 +18,10 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.lifecycle.LiveData;
+import androidx.paging.PagedList;
+import androidx.recyclerview.widget.DiffUtil;
+import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -29,10 +33,11 @@ import com.parse.ParseUser;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
+public class PostAdapter extends ListAdapter<Post,PostAdapter.ViewHolder> {
 
     List<Post> posts;
     Context context;
@@ -40,13 +45,34 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
     public void addAll(List<Post> postsList)
     {
         posts.addAll(postsList);
+        submitList(posts);
     }
 
-    public PostAdapter(Context context, List<Post> posts)
+    public void clear()
     {
-        this.context = context;
-        this.posts = posts;
+        posts.clear();
+        submitList(posts);
     }
+
+    public static final DiffUtil.ItemCallback<Post> DIFF_CALLBACK =
+            new DiffUtil.ItemCallback<Post>() {
+                @Override
+                public boolean areItemsTheSame(Post oldItem, Post newItem) {
+                    return oldItem.getObjectId() == newItem.getObjectId();
+                }
+                @Override
+                public boolean areContentsTheSame(Post oldItem, Post newItem) {
+                    return (oldItem.getObjectId()== newItem.getObjectId());
+                }
+            };
+
+    public PostAdapter(Context context) {
+        super(DIFF_CALLBACK);
+        posts = new ArrayList<>();
+        this.context = context;
+    }
+
+
 
     @NonNull
     @Override
@@ -58,14 +84,15 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         try {
-            holder.bind(posts.get(position));
+            holder.bind(getItem(position));
         } catch (ParseException e) {
             e.printStackTrace();
         }
     }
 
     @Override
-    public int getItemCount() {
+    public int getItemCount()
+    {
         return posts.size();
     }
 
@@ -96,6 +123,9 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
         }
 
         public void bind(final Post post) throws ParseException {
+            post.setParseUser(post.getUser().fetchIfNeeded());
+            if(post.getUser().getUsername() == null)
+                return;
             tvUsername.setText(post.getUser().getUsername());
             tvnumLikes.setText(String.valueOf(post.getLikes()));
             tvPostdescripion.setText(post.getDescription());
