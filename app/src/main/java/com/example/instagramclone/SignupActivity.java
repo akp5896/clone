@@ -35,6 +35,7 @@ public class SignupActivity extends AppCompatActivity {
                 ParseUser user = new ParseUser();
                 user.setUsername(etNewName.getText().toString());
                 user.setPassword(etNewPass.getText().toString());
+
                 user.signUpInBackground(new SignUpCallback() {
                     @Override
                     public void done(ParseException e) {
