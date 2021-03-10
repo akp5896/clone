@@ -17,9 +17,19 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.LiveData;
+import androidx.paging.PagedList;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.CircleCrop;
+import com.example.instagramclone.EndlessRecyclerViewScrollListener;
 import com.example.instagramclone.Post;
+import com.example.instagramclone.PostAdapter;
+import com.example.instagramclone.PostAdapter2;
 import com.example.instagramclone.R;
 import com.parse.FindCallback;
 import com.parse.ParseException;
@@ -32,17 +42,31 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import static android.app.Activity.RESULT_OK;
 
-public class ProfileFragment extends PostsFragment {
+public class ProfileFragment extends Fragment {
 
 
     private static final int RESULT_LOAD_IMAGE = 900;
+    private static final String TAG = "PROFILE";
     ImageView ivProfilePicture;
     TextView username;
     Button btnChangePicture;
+    List<Post> posts;
+    PostAdapter2 adapter2;
+    private RecyclerView rvPosts;
+    private EndlessRecyclerViewScrollListener scrollListener;
+    protected Button btnLogout;
+
+    private SwipeRefreshLayout swipeContainer;
+
+    public ProfileFragment() {
+        // Required empty public constructor
+    }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -53,9 +77,19 @@ public class ProfileFragment extends PostsFragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+
         super.onViewCreated(view, savedInstanceState);
         ivProfilePicture = view.findViewById(R.id.ivProfilePicture);
         username = view.findViewById(R.id.tvUsername);
+
+        posts = new ArrayList<>();
+        adapter2 = new PostAdapter2(getContext(), posts);
+
+        rvPosts = view.findViewById(R.id.rvPosts);
+        btnLogout = view.findViewById(R.id.btnLogout);
+        swipeContainer = view.findViewById(R.id.swipeContainer);
+
+
         btnChangePicture = view.findViewById(R.id.btnChangePicture);
 
         btnChangePicture.setOnClickListener(new View.OnClickListener() {
@@ -68,17 +102,29 @@ public class ProfileFragment extends PostsFragment {
             }
         });
         try {
-            Glide.with(getContext()).load(((ParseFile)ParseUser.getCurrentUser().get("picture")).getFile()).into(ivProfilePicture);
+            ParseFile p = ((ParseFile) ParseUser.getCurrentUser().get("picture"));
+            if(p != null)
+                Glide.with(this).load(p.getFile()).transform(new CircleCrop()).into(ivProfilePicture);
+            else
+                Glide.with(this).load(R.drawable.ic_launcher_background).transform(new CircleCrop()).into(ivProfilePicture);
         } catch (ParseException e) {
             e.printStackTrace();
         }
+
+        LinearLayoutManager manager = new LinearLayoutManager(getContext());
+        rvPosts.setLayoutManager(manager);
+        rvPosts.setAdapter(adapter2);
+
         username.setText(ParseUser.getCurrentUser().getUsername());
+
+        populateQueryPosts();
     }
 
-    //@Override
     protected void populateQueryPosts() {
         ParseQuery<Post> query = ParseQuery.getQuery(Post.class);
         query.include(Post.KEY_USER);
+        //adapter2.clear();;
+        Log.i("here", String.valueOf(adapter2.getItemCount()));
         query.whereEqualTo(Post.KEY_USER, ParseUser.getCurrentUser());
         query.setLimit(20);
         query.addDescendingOrder(Post.KEY_CREATED_AT);
@@ -96,9 +142,8 @@ public class ProfileFragment extends PostsFragment {
                 //    Log.i(TAG, i.getDescription());
                 //}
                 //Collections.reverse(p);
-                //posts.addAll(p);
-                Log.i(TAG, String.valueOf(adapter.getItemCount()));
-                adapter.notifyDataSetChanged();
+                posts.addAll(p);
+                adapter2.notifyDataSetChanged();
             }
         });
     }
