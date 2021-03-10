@@ -57,7 +57,7 @@ public class ProfileFragment extends PostsFragment {
     TextView username;
     Button btnChangePicture;
     List<Post> posts;
-    PostAdapter2 adapter;
+    //PostAdapter2 adapter;
     private EndlessRecyclerViewScrollListener scrollListener;
 
     private SwipeRefreshLayout swipeContainer;
@@ -82,10 +82,7 @@ public class ProfileFragment extends PostsFragment {
         username = view.findViewById(R.id.tvUsername);
 
         posts = new ArrayList<>();
-        adapter = new PostAdapter2(getContext(), posts);
-
-        rvPosts = view.findViewById(R.id.rvPosts);
-        btnLogout = view.findViewById(R.id.btnLogout);
+        //adapter = new PostAdapter2(getContext(), posts);
         swipeContainer = view.findViewById(R.id.swipeContainer);
 
 

@@ -129,9 +129,11 @@ public class PostAdapter extends ListAdapter<Post, PostAdapter.ViewHolder> {
         }
 
         public void bind(final Post post) throws ParseException {
+            post.fetchIfNeeded();
             post.setParseUser(post.getUser().fetchIfNeeded());
-            if(post.getUser() != null && post.getUser().getUsername() == null)
+            if(post.getUser() == null || post.getUser().getUsername() == null)
                 return;
+
             tvUsername.setText(post.getUser().getUsername());
             tvnumLikes.setText(String.valueOf(post.getLikes()));
             tvPostdescripion.setText(post.getDescription());
