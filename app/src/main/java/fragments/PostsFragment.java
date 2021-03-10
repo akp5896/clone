@@ -170,12 +170,18 @@ public class PostsFragment extends Fragment {
         populateQueryPosts();
     }
 
-    protected void populateQueryPosts()
+    public ParseQuery<Post> getQuery()
     {
         ParseQuery<Post> query = ParseQuery.getQuery(Post.class);
         query.include(Post.KEY_USER);
         query.setLimit(5);
         query.addDescendingOrder(Post.KEY_CREATED_AT);
+        return query;
+    }
+
+    protected void populateQueryPosts()
+    {
+        ParseQuery<Post> query = getQuery();
 
         query.findInBackground(new FindCallback<Post>() {
             @Override
@@ -185,18 +191,6 @@ public class PostsFragment extends Fragment {
                     Log.e(TAG, "Issue receiving posts", e);
                     return;
                 }
-
-                //for(Post i : p)
-                //{
-                    //Log.i(TAG, i.getDescription());
-                    //Date a = i.getCreatedAt();
-
-                    //Log.i(TAG, x);
-                //    Log.i(TAG, "!");
-                //}
-                //Collections.reverse(p);
-                //posts.clear();
-                //posts.addAll(p);
                 adapter.clear();
                 adapter.addAll(p);
                 Log.i(TAG, String.valueOf(adapter.getItemCount()));

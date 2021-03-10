@@ -1,5 +1,6 @@
 package fragments;
 
+import android.app.DownloadManager;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -119,16 +120,19 @@ public class ProfileFragment extends Fragment {
 
         populateQueryPosts();
     }
-
-    protected void populateQueryPosts() {
+    public ParseQuery<Post> getQuery()
+    {
         ParseQuery<Post> query = ParseQuery.getQuery(Post.class);
         query.include(Post.KEY_USER);
-        //adapter2.clear();;
-        Log.i("here", String.valueOf(adapter2.getItemCount()));
         query.whereEqualTo(Post.KEY_USER, ParseUser.getCurrentUser());
         query.setLimit(20);
         query.addDescendingOrder(Post.KEY_CREATED_AT);
+        return query;
+    }
 
+    protected void populateQueryPosts() {
+
+        ParseQuery<Post> query = getQuery();
         query.findInBackground(new FindCallback<Post>() {
             @Override
             public void done(List<Post> p, ParseException e) {
@@ -154,38 +158,9 @@ public class ProfileFragment extends Fragment {
 
         if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && null !=data){
             Uri selectedImageUri = data.getData();
-            File mediaStorageDir = new File(getContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES), TAG);
-
-            File f=new File(getContext().getCacheDir(),"file name");
             ivProfilePicture.setImageURI(selectedImageUri);
-            try {
-                f.createNewFile();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
 
-            //Convert bitmap to byte array
-            Bitmap bitmap = null;
-            try {
-                bitmap = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), selectedImageUri);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            ByteArrayOutputStream bos = new ByteArrayOutputStream();
-            bitmap.compress(Bitmap.CompressFormat.PNG, 0 /*ignored for PNG*/, bos);
-            byte[] bitmapdata = bos.toByteArray();
-
-            //write the bytes in file
-            FileOutputStream fos = null;
-            try {
-                fos = new FileOutputStream(f);
-                fos.write(bitmapdata);
-                fos.flush();
-                fos.close();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            File f = getFile(selectedImageUri);
 
 
             ParseUser user = ParseUser.getCurrentUser();
@@ -203,6 +178,38 @@ public class ProfileFragment extends Fragment {
         } else {
             Toast.makeText(getContext(), "You have not selected and image", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    private File getFile(Uri selectedImageUri) {
+        File f=new File(getContext().getCacheDir(),"file name");
+        try {
+            f.createNewFile();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        //Convert bitmap to byte array
+        Bitmap bitmap = null;
+        try {
+            bitmap = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), selectedImageUri);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 0 /*ignored for PNG*/, bos);
+        byte[] bitmapdata = bos.toByteArray();
+
+        //write the bytes in file
+        FileOutputStream fos = null;
+        try {
+            fos = new FileOutputStream(f);
+            fos.write(bitmapdata);
+            fos.flush();
+            fos.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return f;
     }
 
 
