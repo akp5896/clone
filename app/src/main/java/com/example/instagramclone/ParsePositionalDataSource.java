@@ -12,8 +12,9 @@ public class ParsePositionalDataSource extends PositionalDataSource<Post> {
 
     // define basic query here
     public ParseQuery<Post> getQuery() {
-        return ParseQuery.getQuery(Post.class).orderByDescending("createdAt");
-    }
+       return ParseQuery.getQuery(Post.class).orderByDescending("createdAt");
+   }
+
 
     @Override
     public void loadInitial(@NonNull LoadInitialParams params, @NonNull LoadInitialCallback<Post> callback) {

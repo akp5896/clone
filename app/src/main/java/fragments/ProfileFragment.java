@@ -19,6 +19,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.LiveData;
 import androidx.paging.PagedList;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -28,6 +29,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.example.instagramclone.EndlessRecyclerViewScrollListener;
+import com.example.instagramclone.LoginActivity;
 import com.example.instagramclone.MainActivity;
 import com.example.instagramclone.Post;
 import com.example.instagramclone.PostAdapter;
@@ -49,16 +51,18 @@ import java.util.List;
 
 import static android.app.Activity.RESULT_OK;
 
-public class ProfileFragment extends PostsFragment {
+public class ProfileFragment  extends Fragment {
 
 
     private static final int RESULT_LOAD_IMAGE = 900;
+    protected RecyclerView rvPosts;
     private static final String TAG = "PROFILE";
     ImageView ivProfilePicture;
     TextView username;
     Button btnChangePicture;
     List<Post> posts;
-    //PostAdapter2 adapter;
+    protected Button btnLogout;
+    PostAdapter2 adapter;
     private EndlessRecyclerViewScrollListener scrollListener;
 
     private SwipeRefreshLayout swipeContainer;
@@ -82,10 +86,12 @@ public class ProfileFragment extends PostsFragment {
         ivProfilePicture = view.findViewById(R.id.ivProfilePicture);
         username = view.findViewById(R.id.tvUsername);
 
+        //adapter2 = new PostAdapter();
+        rvPosts = view.findViewById(R.id.rvPosts);
         posts = new ArrayList<>();
-        //adapter = new PostAdapter2(getContext(), posts);
+        adapter = new PostAdapter2(getContext(), posts);
         swipeContainer = view.findViewById(R.id.swipeContainer);
-
+        btnLogout = view.findViewById(R.id.btnLogout);
 
         btnChangePicture = view.findViewById(R.id.btnChangePicture);
 
@@ -99,13 +105,48 @@ public class ProfileFragment extends PostsFragment {
             }
         });
 
+        LinearLayoutManager manager = new LinearLayoutManager(getContext());
+        rvPosts.setLayoutManager(manager);
+        scrollListener = new EndlessRecyclerViewScrollListener(manager) {
+            @Override
+            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
+                // Triggered only when new data needs to be appended to the list
+                // Add whatever code is needed to append new items to the bottom of the list
+                loadMoreData();
+            }
+        };
+
+        rvPosts.addOnScrollListener(scrollListener);
+
+
+
+        btnLogout.setText(String.format(getResources().getString(R.string.logged), ParseUser.getCurrentUser().getUsername()));
+        btnLogout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ParseUser.logOut();
+                Intent i = new Intent(getActivity(), LoginActivity.class);
+                startActivity(i);
+                getActivity().finish();
+            }
+        });
+
+        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                Log.i("123", "fetching new data");
+                populateQueryPosts();
+
+            }
+        });
+
+        rvPosts.setAdapter(adapter);
         MainActivity.SavePicture(ivProfilePicture, getActivity(), ((ParseFile) ParseUser.getCurrentUser().get("picture")));
 
         username.setText(ParseUser.getCurrentUser().getUsername());
         populateQueryPosts();
     }
 
-    @Override
     public ParseQuery<Post> getQuery()
     {
         ParseQuery<Post> query = ParseQuery.getQuery(Post.class);
@@ -118,6 +159,27 @@ public class ProfileFragment extends PostsFragment {
 
 
 
+    private void loadMoreData() {
+        Log.i(TAG, "scolled");
+        ParseQuery<Post> query = getQuery();
+        query.setSkip(adapter.getItemCount());
+
+        query.findInBackground(new FindCallback<Post>() {
+            @Override
+            public void done(List<Post> p, ParseException e) {
+                if(e != null)
+                {
+                    Log.e(TAG, "Issue receiving posts", e);
+                    return;
+                }
+                adapter.addAll(p);
+                Log.i(TAG, String.valueOf(adapter.getItemCount()));
+
+                adapter.notifyDataSetChanged();
+                swipeContainer.setRefreshing(false);
+            }
+        });
+    }
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data){
         super.onActivityResult(requestCode, resultCode, data);
@@ -178,5 +240,24 @@ public class ProfileFragment extends PostsFragment {
         return f;
     }
 
+    protected void populateQueryPosts()
+    {
+        ParseQuery<Post> query = getQuery();
 
+        query.findInBackground(new FindCallback<Post>() {
+            @Override
+            public void done(List<Post> p, ParseException e) {
+                if(e != null)
+                {
+                    Log.e(TAG, "Issue receiving posts", e);
+                    return;
+                }
+                adapter.clear();
+                adapter.addAll(p);
+                Log.i(TAG, String.valueOf(adapter.getItemCount()));
+                adapter.notifyDataSetChanged();
+                swipeContainer.setRefreshing(false);
+            }
+        });
+    }
 }

@@ -1,6 +1,11 @@
 package com.example.instagramclone;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Observer;
+import androidx.paging.LivePagedListBuilder;
+import androidx.paging.PagedList;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -34,6 +39,7 @@ public class UserProfileActivity extends AppCompatActivity {
     private RecyclerView rvPosts;
     protected PostAdapter2 adapter;
     private SwipeRefreshLayout swipeContainer;
+    //LiveData<PagedList<Post>> posts;
     protected List<Post> posts;
     ParseUser user;
 
@@ -46,6 +52,7 @@ public class UserProfileActivity extends AppCompatActivity {
 
         rvPosts = findViewById(R.id.rvPosts);
         swipeContainer = findViewById(R.id.swipeContainer);
+        //posts = new ArrayList<>();
         posts = new ArrayList<>();
         adapter = new PostAdapter2(this, posts);
 
@@ -57,6 +64,8 @@ public class UserProfileActivity extends AppCompatActivity {
 
             }
         });
+
+
 
         rvPosts.setAdapter(adapter);
         rvPosts.setLayoutManager(new LinearLayoutManager(UserProfileActivity.this));
@@ -72,12 +81,40 @@ public class UserProfileActivity extends AppCompatActivity {
     }
 
 
-    protected void populateQueryPosts() {
+    public ParseQuery<Post> getQuery()
+    {
         ParseQuery<Post> query = ParseQuery.getQuery(Post.class);
         query.include(Post.KEY_USER);
         query.whereEqualTo(Post.KEY_USER, user);
         query.setLimit(20);
         query.addDescendingOrder(Post.KEY_CREATED_AT);
+        return query;
+    }
+
+    private void loadMoreData() {
+        Log.i(TAG, "scolled");
+        ParseQuery<Post> query = getQuery();
+        query.setSkip(adapter.getItemCount());
+
+        query.findInBackground(new FindCallback<Post>() {
+            @Override
+            public void done(List<Post> p, ParseException e) {
+                if(e != null)
+                {
+                    Log.e(TAG, "Issue receiving posts", e);
+                    return;
+                }
+                adapter.addAll(p);
+                Log.i(TAG, String.valueOf(adapter.getItemCount()));
+
+                adapter.notifyDataSetChanged();
+                swipeContainer.setRefreshing(false);
+            }
+        });
+    }
+
+    protected void populateQueryPosts() {
+        ParseQuery<Post> query = getQuery();
 
         query.findInBackground(new FindCallback<Post>() {
             @Override
@@ -92,9 +129,14 @@ public class UserProfileActivity extends AppCompatActivity {
                 //    Log.i(TAG, i.getDescription());
                 //}
                 //Collections.reverse(p);
-                posts.addAll(p);
+                //posts.addAll(p);
+                //Log.i(TAG, String.valueOf(adapter.getItemCount()));
+                //adapter.notifyDataSetChanged();
+                adapter.clear();
+                adapter.addAll(p);
                 Log.i(TAG, String.valueOf(adapter.getItemCount()));
                 adapter.notifyDataSetChanged();
+                swipeContainer.setRefreshing(false);
             }
         });
     }

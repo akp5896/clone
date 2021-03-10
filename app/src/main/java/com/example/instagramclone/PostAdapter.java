@@ -19,6 +19,8 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.LiveData;
 import androidx.paging.PagedList;
 import androidx.recyclerview.widget.DiffUtil;
@@ -37,6 +39,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import fragments.ComposeFragment;
 
 public class PostAdapter extends ListAdapter<Post, PostAdapter.ViewHolder> {
 

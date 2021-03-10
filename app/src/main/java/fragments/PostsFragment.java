@@ -47,7 +47,7 @@ public class PostsFragment extends Fragment {
     public static final String TAG = "Posts fragment";
 
     protected RecyclerView rvPosts;
-    protected PostAdapter adapter;
+    private PostAdapter adapter;
     private EndlessRecyclerViewScrollListener scrollListener;
     protected Button btnLogout;
     LiveData<PagedList<Post>> posts;
@@ -141,11 +141,8 @@ public class PostsFragment extends Fragment {
 
     private void loadMoreData() {
         Log.i(TAG, "scolled");
-        ParseQuery<Post> query = ParseQuery.getQuery(Post.class);
-        query.include(Post.KEY_USER);
+        ParseQuery<Post> query = getQuery();
         query.setSkip(adapter.getItemCount());
-        query.setLimit(5);
-        query.addDescendingOrder(Post.KEY_CREATED_AT);
 
         query.findInBackground(new FindCallback<Post>() {
             @Override
