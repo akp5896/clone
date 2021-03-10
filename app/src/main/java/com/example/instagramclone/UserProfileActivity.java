@@ -32,7 +32,7 @@ public class UserProfileActivity extends AppCompatActivity {
     ImageView ivProfilePicture;
     TextView username;
     private RecyclerView rvPosts;
-    protected PostAdapter adapter;
+    protected PostAdapter2 adapter;
     private SwipeRefreshLayout swipeContainer;
     protected List<Post> posts;
     ParseUser user;
@@ -47,7 +47,7 @@ public class UserProfileActivity extends AppCompatActivity {
         rvPosts = findViewById(R.id.rvPosts);
         swipeContainer = findViewById(R.id.swipeContainer);
         posts = new ArrayList<>();
-        //adapter = new PostAdapter(this, posts);
+        adapter = new PostAdapter2(this, posts);
 
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
