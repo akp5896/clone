@@ -78,7 +78,8 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
         TextView tvPostdescripion;
         TextView tvDate;
         ImageView ivProfpic;
-        RelativeLayout container;
+        RelativeLayout body;
+        RelativeLayout user;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -89,7 +90,8 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
             ivCapture = itemView.findViewById(R.id.ivCapture);
             tvPostdescripion = itemView.findViewById(R.id.tvPostDescription);
             tvDate = itemView.findViewById(R.id.tvCreatedAt);
-            container = itemView.findViewById(R.id.rvContainer);
+            body = itemView.findViewById(R.id.rvBody);
+            user = itemView.findViewById(R.id.rvUser);
 
         }
 
@@ -138,7 +140,16 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
                 }
             });
 
-            container.setOnClickListener(new View.OnClickListener() {
+            user.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent i = new Intent(context, UserProfileActivity.class);
+                    i.putExtra("user", post.getUser());
+                    context.startActivity(i);
+                }
+            });
+
+            body.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Intent i = new Intent(context, DetailedActivity.class);

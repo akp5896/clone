@@ -8,7 +8,11 @@
     android:id="@+id/rvContainer"
     android:layout_margin="10dp">
 
-<ImageView
+    <RelativeLayout
+        android:id="@+id/rvUser"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+    <ImageView
     android:layout_width="40dp"
     android:id="@+id/ivProfpic"
     android:layout_height="40dp"/>
@@ -25,13 +29,18 @@
         android:layout_alignParentEnd="true"
         android:layout_height="wrap_content"
         tools:text="TextView" />
+    </RelativeLayout>
 
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_below="@id/rvUser"
+        android:id="@+id/rvBody"
+        android:layout_height="wrap_content">
     <ImageView
         android:id="@+id/ivCapture"
         android:layout_width="200dp"
         android:layout_height="200dp"
         android:scaleType="fitXY"
-        android:layout_below="@+id/ivProfpic"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="false"
         tools:srcCompat="@tools:sample/avatars" />
@@ -77,4 +86,5 @@
             android:src="@drawable/ufi_new_direct"
             android:layout_height="20dp"/>
     </LinearLayout>
+    </RelativeLayout>
 </RelativeLayout>
