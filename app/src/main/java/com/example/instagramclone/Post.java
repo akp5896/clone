@@ -12,6 +12,7 @@ import com.parse.ParseUser;
 
 import org.parceler.Parcel;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 @ParseClassName("Post")
@@ -30,7 +31,12 @@ public class Post extends ParseObject {
         return getString(KEY_DESCRIPTION);
     }
 
-    public boolean isLiked(){return getBoolean(KEY_LIKED);}
+    public boolean isLiked(ParseUser user){
+        ArrayList<String> a = getLikedBy();
+        if(a == null)
+            return  false;
+        return a.contains(user.getObjectId());
+    }
 
     public void setLiked(boolean val)
     {
@@ -38,6 +44,13 @@ public class Post extends ParseObject {
     }
 
     public int getLikes(){return getInt(KEY_LIKESCOUNT);}
+
+    public void setLikedBy(ArrayList<String> a)
+    {
+        put("likesBy", a);
+    }
+
+    public ArrayList<String> getLikedBy(){return (ArrayList<String>) get("likesBy");}
 
     public void setLikes(int value){put(KEY_LIKESCOUNT, value);}
 

@@ -1,6 +1,7 @@
 package com.example.instagramclone;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -56,6 +57,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
         public void bind(Comment comment) {
             username.setText(comment.getUser().getUsername());
             content.setText(comment.getContent());
+
             created.setText(TimeFormatter.getRelativeTime(comment.getCreatedAt()));
         }
     }

@@ -5,6 +5,8 @@ import com.parse.ParseFile;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
 
+import java.lang.reflect.Array;
+
 @ParseClassName("Comment")
 public class Comment extends ParseObject {
     public static final String KEY_CONTENT = "content";
@@ -25,6 +27,7 @@ public class Comment extends ParseObject {
     {
         return (Post) getParseObject(KEY_COMMENT_TO);
     }
+
 
     public void setCommentTo(Post post)
     {

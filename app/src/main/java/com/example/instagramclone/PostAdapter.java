@@ -151,7 +151,7 @@ public class PostAdapter extends ListAdapter<Post, PostAdapter.ViewHolder> {
                 ivCapture.setImageBitmap(takenImage);
             }
 
-            if(!post.isLiked())
+            if(!post.isLiked(ParseUser.getCurrentUser()))
                 ibHeart.setBackgroundResource(R.drawable.ufi_heart);
             else
                 ibHeart.setBackgroundResource(R.drawable.ufi_heart_active);
@@ -159,16 +159,27 @@ public class PostAdapter extends ListAdapter<Post, PostAdapter.ViewHolder> {
             ibHeart.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if(post.isLiked())
+                    if(post.isLiked(ParseUser.getCurrentUser()))
                     {
-                        post.setLiked(false);
+                        ArrayList<String> a = post.getLikedBy();
+                        if(a == null)
+                            a = new ArrayList<>();
+                        a.remove(ParseUser.getCurrentUser().getObjectId());
+                        post.setLikedBy(a);
+                        //post.setLiked(false);
+
                         post.setLikes(post.getLikes() - 1);
                         ibHeart.setBackgroundResource(R.drawable.ufi_heart);
+
                     }
                     else
                     {
+                        ArrayList<String> a = post.getLikedBy();
+                        if(a == null)
+                            a = new ArrayList<>();
+                        a.add(ParseUser.getCurrentUser().getObjectId());
                         post.setLikes(post.getLikes() + 1);
-                        post.setLiked(true);
+                        post.setLikedBy(a);
                         ibHeart.setBackgroundResource(R.drawable.ufi_heart_active);
                     }
                     tvnumLikes.setText(String.valueOf(post.getLikes()));
