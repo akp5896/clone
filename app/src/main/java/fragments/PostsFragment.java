@@ -55,7 +55,7 @@ public class PostsFragment extends Fragment {
     protected Button btnLogout;
     private SwipeRefreshLayout swipeContainer;
 
-    LiveData<PagedList<Post>> posts;
+    List<Post> posts;
 
     //List<Post> posts;
 
@@ -83,29 +83,31 @@ public class PostsFragment extends Fragment {
         rvPosts = view.findViewById(R.id.rvPosts);
         btnLogout = view.findViewById(R.id.btnLogout);
         swipeContainer = view.findViewById(R.id.swipeContainer);
-        //posts = new ArrayList<>();
+        posts = new ArrayList<>();
+        adapter = new PostAdapter(getContext(), posts);
+
         //adapter = new PostAdapter(getContext(), posts);
 
-        adapter = new PostAdapter(getContext());
+        //PagedList.Config pagedListConfig =
+        //        new PagedList.Config.Builder().setEnablePlaceholders(true)
+        //                .setPrefetchDistance(10)
+        //                .setInitialLoadSizeHint(10)
+        //                .setPageSize(10).build();
 
-        PagedList.Config pagedListConfig =
-                new PagedList.Config.Builder().setEnablePlaceholders(true)
-                        .setPrefetchDistance(10)
-                        .setInitialLoadSizeHint(10)
-                        .setPageSize(10).build();
+        //PagedList.Config config = new PagedList.Config.Builder().setPageSize(20).build();
 
-        PagedList.Config config = new PagedList.Config.Builder().setPageSize(20).build();
+        //ParseDataSourceFactory sourceFactory = new ParseDataSourceFactory();
 
-        ParseDataSourceFactory sourceFactory = new ParseDataSourceFactory();
+        //posts = new LivePagedListBuilder<>(sourceFactory, config).build();
 
-        posts = new LivePagedListBuilder<>(sourceFactory, config).build();
 
-        posts.observe(this, new Observer<PagedList<Post>>() {
-            @Override
-            public void onChanged(@Nullable PagedList<Post> tweets) {
-                adapter.submitList(tweets);
-            }
-        });
+
+        //posts.observe(this, new Observer<PagedList<Post>>() {
+        //    @Override
+        //    public void onChanged(@Nullable PagedList<Post> tweets) {
+        //        adapter.submitList(tweets);
+        //    }
+        //});
 
 
 

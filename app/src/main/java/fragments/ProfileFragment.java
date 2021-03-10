@@ -96,7 +96,7 @@ public class ProfileFragment extends PostsFragment {
                 //    Log.i(TAG, i.getDescription());
                 //}
                 //Collections.reverse(p);
-                //posts.addAll(p);
+                posts.addAll(p);
                 Log.i(TAG, String.valueOf(adapter.getItemCount()));
                 adapter.notifyDataSetChanged();
             }

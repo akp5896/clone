@@ -37,7 +37,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class PostAdapter extends ListAdapter<Post,PostAdapter.ViewHolder> {
+public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
 
     List<Post> posts;
     Context context;
@@ -45,30 +45,30 @@ public class PostAdapter extends ListAdapter<Post,PostAdapter.ViewHolder> {
     public void addAll(List<Post> postsList)
     {
         posts.addAll(postsList);
-        submitList(posts);
+        //submitList(posts);
     }
 
     public void clear()
     {
         posts.clear();
-        submitList(posts);
+        //submitList(posts);
     }
 
     public static final DiffUtil.ItemCallback<Post> DIFF_CALLBACK =
             new DiffUtil.ItemCallback<Post>() {
                 @Override
                 public boolean areItemsTheSame(Post oldItem, Post newItem) {
-                    return oldItem.getObjectId() == newItem.getObjectId();
+                    return oldItem.getObjectId().equals(newItem.getObjectId());
                 }
                 @Override
                 public boolean areContentsTheSame(Post oldItem, Post newItem) {
-                    return (oldItem.getObjectId()== newItem.getObjectId());
+                    return (oldItem.getObjectId().equals(newItem.getObjectId()));
                 }
             };
 
-    public PostAdapter(Context context) {
-        super(DIFF_CALLBACK);
-        posts = new ArrayList<>();
+    public PostAdapter(Context context, List<Post> posts) {
+        //super(DIFF_CALLBACK);
+        this.posts = posts;
         this.context = context;
     }
 
@@ -84,17 +84,18 @@ public class PostAdapter extends ListAdapter<Post,PostAdapter.ViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         try {
-            holder.bind(getItem(position));
+            holder.bind(posts.get(position));
         } catch (ParseException e) {
             e.printStackTrace();
+
         }
     }
 
     @Override
-    public int getItemCount()
-    {
+    public int getItemCount() {
         return posts.size();
     }
+
 
     public class ViewHolder extends RecyclerView.ViewHolder
     {

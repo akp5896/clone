@@ -51,6 +51,7 @@ public class ParsePositionalDataSource extends PositionalDataSource<Post> {
             // run queries synchronously since function is called on a background thread
             List<Post> posts = query.find();
 
+
             // return info back to PagedList
             callback.onResult(posts);
         } catch (ParseException e) {

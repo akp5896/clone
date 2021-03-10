@@ -47,7 +47,7 @@ public class UserProfileActivity extends AppCompatActivity {
         rvPosts = findViewById(R.id.rvPosts);
         swipeContainer = findViewById(R.id.swipeContainer);
         posts = new ArrayList<>();
-        //adapter = new PostAdapter(this, posts);
+        adapter = new PostAdapter(this, posts);
 
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -60,6 +60,7 @@ public class UserProfileActivity extends AppCompatActivity {
 
         rvPosts.setAdapter(adapter);
         rvPosts.setLayoutManager(new LinearLayoutManager(UserProfileActivity.this));
+
 
         ivProfilePicture = findViewById(R.id.ivProfilePicture);
         username = findViewById(R.id.tvUsername);
