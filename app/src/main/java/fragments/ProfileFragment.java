@@ -2,9 +2,6 @@ package fragments;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -21,11 +18,10 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.bumptech.glide.Glide;
 import com.example.instagramclone.Post;
 import com.example.instagramclone.R;
-import com.example.instagramclone.UserPicture;
 import com.parse.FindCallback;
-import com.parse.Parse;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseQuery;
@@ -34,11 +30,8 @@ import com.parse.SaveCallback;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.List;
 
 import static android.app.Activity.RESULT_OK;
@@ -74,7 +67,11 @@ public class ProfileFragment extends PostsFragment {
                 startActivityForResult(galleryIntent, RESULT_LOAD_IMAGE);
             }
         });
-
+        try {
+            Glide.with(getContext()).load(((ParseFile)ParseUser.getCurrentUser().get("picture")).getFile()).into(ivProfilePicture);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
         username.setText(ParseUser.getCurrentUser().getUsername());
     }
 
@@ -146,15 +143,11 @@ public class ProfileFragment extends PostsFragment {
             }
 
 
-
-        UserPicture up = new UserPicture();
-            up.setImage(new ParseFile(f));
-            up.setParseUser(ParseUser.getCurrentUser());
-            //user.notify();
+            ParseUser user = ParseUser.getCurrentUser();
+            user.put("picture", new ParseFile(f));
 
 
-
-            up.saveInBackground(new SaveCallback() {
+            user.saveInBackground(new SaveCallback() {
                 @Override
                 public void done(ParseException e) {
                     Log.i(TAG, "Image saved!");

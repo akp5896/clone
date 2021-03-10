@@ -21,9 +21,11 @@ import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
+import com.parse.ParseUser;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -75,10 +77,12 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
         TextView tvnumLikes;
         TextView tvPostdescripion;
         TextView tvDate;
+        ImageView ivProfpic;
         RelativeLayout container;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
+            ivProfpic = itemView.findViewById(R.id.ivProfpic);
             tvnumLikes = itemView.findViewById(R.id.numlikes);
             ibHeart = itemView.findViewById(R.id.ibHeart);
             tvUsername = itemView.findViewById(R.id.tvUsername);
@@ -94,6 +98,15 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
             tvnumLikes.setText(String.valueOf(post.getLikes()));
             tvPostdescripion.setText(post.getDescription());
             tvDate.setText(TimeFormatter.getRelativeTime(post.getCreatedAt()));
+            try {
+                ParseFile p = ((ParseFile) post.getUser().get("picture"));
+                if(p != null)
+                    Glide.with(context).load(p.getFile()).transform(new CircleCrop()).into(ivProfpic);
+                else
+                    Glide.with(context).load(R.drawable.ic_launcher_background).transform(new CircleCrop()).into(ivProfpic);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
             if(post.getImage() != null)
             {
                 Bitmap takenImage = BitmapFactory.decodeFile(post.getImage().getFile().getAbsolutePath());
