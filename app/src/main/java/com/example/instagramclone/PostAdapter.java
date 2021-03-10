@@ -1,5 +1,6 @@
 package com.example.instagramclone;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -138,15 +139,8 @@ public class PostAdapter extends ListAdapter<Post, PostAdapter.ViewHolder> {
             tvnumLikes.setText(String.valueOf(post.getLikes()));
             tvPostdescripion.setText(post.getDescription());
             tvDate.setText(TimeFormatter.getRelativeTime(post.getCreatedAt()));
-            try {
-                ParseFile p = ((ParseFile) post.getUser().get("picture"));
-                if(p != null)
-                    Glide.with(context).load(p.getFile()).transform(new CircleCrop()).into(ivProfpic);
-                else
-                    Glide.with(context).load(R.drawable.ic_launcher_background).transform(new CircleCrop()).into(ivProfpic);
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
+            MainActivity.SavePicture(ivProfpic, (Activity) context, ((ParseFile) post.getUser().get("picture")));
+
             if(post.getImage() != null)
             {
                 Bitmap takenImage = BitmapFactory.decodeFile(post.getImage().getFile().getAbsolutePath());

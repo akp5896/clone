@@ -7,6 +7,7 @@ import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -24,6 +25,8 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.google.android.material.bottomappbar.BottomAppBar;
 import com.google.android.material.bottomnavigation.BottomNavigationMenu;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -82,5 +85,17 @@ public class MainActivity extends AppCompatActivity {
         });
 
         bottomNavigationView.setSelectedItemId(R.id.action_home);
+    }
+
+    public static void SavePicture(ImageView iv, Activity activity, ParseFile p)
+    {
+        try {
+            if(p != null)
+                Glide.with(activity).load(p.getFile()).transform(new CircleCrop()).into(iv);
+            else
+                Glide.with(activity).load(R.drawable.ic_launcher_background).transform(new CircleCrop()).into(iv);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
     }
 }

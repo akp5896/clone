@@ -28,6 +28,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.example.instagramclone.EndlessRecyclerViewScrollListener;
+import com.example.instagramclone.MainActivity;
 import com.example.instagramclone.Post;
 import com.example.instagramclone.PostAdapter;
 import com.example.instagramclone.PostAdapter2;
@@ -97,15 +98,9 @@ public class ProfileFragment extends PostsFragment {
                 startActivityForResult(galleryIntent, RESULT_LOAD_IMAGE);
             }
         });
-        try {
-            ParseFile p = ((ParseFile) ParseUser.getCurrentUser().get("picture"));
-            if(p != null)
-                Glide.with(this).load(p.getFile()).transform(new CircleCrop()).into(ivProfilePicture);
-            else
-                Glide.with(this).load(R.drawable.ic_launcher_background).transform(new CircleCrop()).into(ivProfilePicture);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
+
+        MainActivity.SavePicture(ivProfilePicture, getActivity(), ((ParseFile) ParseUser.getCurrentUser().get("picture")));
+
         username.setText(ParseUser.getCurrentUser().getUsername());
         populateQueryPosts();
     }

@@ -64,15 +64,8 @@ public class UserProfileActivity extends AppCompatActivity {
 
         ivProfilePicture = findViewById(R.id.ivProfilePicture);
         username = findViewById(R.id.tvUsername);
-        try {
-            ParseFile p = ((ParseFile) user.get("picture"));
-            if(p != null)
-                Glide.with(this).load(p.getFile()).transform(new CircleCrop()).into(ivProfilePicture);
-            else
-                Glide.with(this).load(R.drawable.ic_launcher_background).transform(new CircleCrop()).into(ivProfilePicture);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
+        MainActivity.SavePicture(ivProfilePicture, this, ((ParseFile) user.get("picture")));
+
         username.setText(user.getUsername());
         populateQueryPosts();
 
