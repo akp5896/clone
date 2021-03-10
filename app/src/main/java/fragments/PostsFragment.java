@@ -21,6 +21,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 
+import com.example.instagramclone.EndlessRecyclerViewScrollListener;
 import com.example.instagramclone.LoginActivity;
 import com.example.instagramclone.MainActivity;
 import com.example.instagramclone.ParseDataSourceFactory;
@@ -52,6 +53,7 @@ public class PostsFragment extends Fragment {
 
     private RecyclerView rvPosts;
     protected PostAdapter adapter;
+    private EndlessRecyclerViewScrollListener scrollListener;
     protected Button btnLogout;
     private SwipeRefreshLayout swipeContainer;
 
@@ -108,6 +110,18 @@ public class PostsFragment extends Fragment {
         //        adapter.submitList(tweets);
         //    }
         //});
+        LinearLayoutManager manager = new LinearLayoutManager(getContext());
+        rvPosts.setLayoutManager(manager);
+        scrollListener = new EndlessRecyclerViewScrollListener(manager) {
+            @Override
+            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
+                // Triggered only when new data needs to be appended to the list
+                // Add whatever code is needed to append new items to the bottom of the list
+                loadMoreData();
+            }
+        };
+
+        rvPosts.addOnScrollListener(scrollListener);
 
 
 
@@ -125,27 +139,52 @@ public class PostsFragment extends Fragment {
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                Log.i(TAG, "fetching new data");
-                populateQueryPosts();
+                Log.i("123", "fetching new data");
+                populateQueryPosts(0);
 
             }
         });
 
         rvPosts.setAdapter(adapter);
-        rvPosts.setLayoutManager(new LinearLayoutManager(getContext()));
-        populateQueryPosts();
+
+        populateQueryPosts(0);
+    }
+
+    private void loadMoreData() {
+        Log.i(TAG, "scolled");
+        ParseQuery<Post> query = ParseQuery.getQuery(Post.class);
+        query.include(Post.KEY_USER);
+        query.setSkip(adapter.getItemCount());
+        query.setLimit(20);
+        query.addDescendingOrder(Post.KEY_CREATED_AT);
+
+        query.findInBackground(new FindCallback<Post>() {
+            @Override
+            public void done(List<Post> p, ParseException e) {
+                if(e != null)
+                {
+                    Log.e(TAG, "Issue receiving posts", e);
+                    return;
+                }
+                adapter.addAll(p);
+                Log.i(TAG, String.valueOf(adapter.getItemCount()));
+                adapter.notifyDataSetChanged();
+                swipeContainer.setRefreshing(false);
+            }
+        });
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        populateQueryPosts();
+        populateQueryPosts(0);
     }
 
-    protected void populateQueryPosts()
+    protected void populateQueryPosts(int skip)
     {
         ParseQuery<Post> query = ParseQuery.getQuery(Post.class);
         query.include(Post.KEY_USER);
+        query.setSkip(skip);
         query.setLimit(20);
         query.addDescendingOrder(Post.KEY_CREATED_AT);
 

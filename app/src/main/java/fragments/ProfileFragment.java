@@ -75,7 +75,7 @@ public class ProfileFragment extends PostsFragment {
         username.setText(ParseUser.getCurrentUser().getUsername());
     }
 
-    @Override
+    //@Override
     protected void populateQueryPosts() {
         ParseQuery<Post> query = ParseQuery.getQuery(Post.class);
         query.include(Post.KEY_USER);
