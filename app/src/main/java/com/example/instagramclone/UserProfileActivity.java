@@ -6,6 +6,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.paging.LivePagedListBuilder;
 import androidx.paging.PagedList;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -68,7 +69,7 @@ public class UserProfileActivity extends AppCompatActivity {
 
 
         rvPosts.setAdapter(adapter);
-        rvPosts.setLayoutManager(new LinearLayoutManager(UserProfileActivity.this));
+        rvPosts.setLayoutManager(new GridLayoutManager(UserProfileActivity.this, 2));
 
 
         ivProfilePicture = findViewById(R.id.ivProfilePicture);

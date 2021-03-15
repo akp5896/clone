@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -22,6 +23,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.LiveData;
 import androidx.paging.PagedList;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -105,7 +107,7 @@ public class ProfileFragment  extends Fragment {
             }
         });
 
-        LinearLayoutManager manager = new LinearLayoutManager(getContext());
+        GridLayoutManager manager = new GridLayoutManager(getContext(), 2);
         rvPosts.setLayoutManager(manager);
         scrollListener = new EndlessRecyclerViewScrollListener(manager) {
             @Override
